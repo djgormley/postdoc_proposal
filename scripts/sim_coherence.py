@@ -12,8 +12,8 @@ Two cases, side by side:
   right  smooth chromaticity  g = 1 + dg(nu), dg with delay content spread
          smoothly to a few hundred ns  -> no ridges, a smear near Delta = 0
 
-That contrast is the go/no-go test in Section 4: it is what distinguishes
-leakage this method can remove from leakage it cannot.
+The contrast provides the preliminary test in Section 4. Real data may contain
+both isolated ridges and broad chromatic structure, requiring a hybrid model.
 
 Run:  python3 sim_coherence.py
 Out:  fig_coherence_sim.pdf / .png
@@ -136,7 +136,7 @@ kw = dict(origin="lower", aspect="auto", cmap="magma", vmin=0, vmax=1,
           extent=[t[0], t[-1], dl[0], dl[-1]])
 for ax, G, title in zip(
         axes, [G_disc, G_smooth],
-        ["discrete delays (33, 175 ns)", "smooth chromaticity, same rms"]):
+        ["discrete delays (33, 175 ns)", "smooth chromaticity, comparable RMS"]):
     im = ax.imshow(G, **kw)
     ax.set_xlabel(r"delay $\tau$ [ns]")
     ax.set_title(title)

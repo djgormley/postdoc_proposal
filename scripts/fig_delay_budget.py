@@ -4,7 +4,8 @@ Figure 1: the delay budget of CHIME's 21 cm auto-spectrum analysis.
 Schematic, not a measurement. The BAO curve is sin(k r_d) exp(-k^2 Sigma^2/2)
 with r_d = 100 h^-1 Mpc and Sigma = 7 h^-1 Mpc -- the right wiggle spacing and
 damping, arbitrary amplitude. Everything else on the figure (the 200 ns cut,
-the 280 ns mask, the 33 ns standing wave, the 5 sigma requirement band) is
+the 280 ns retained floor, the 33 ns standing wave, and the scenario-dependent
+5 sigma target band) is
 sourced: Amiri et al. 2025 (arXiv:2511.19620) and the RFIsher sweep.
 
 Delay <-> k_par conversion at z = 1.16:
@@ -28,9 +29,9 @@ SIGMA_NL = 7.0           # BAO damping, h^-1 Mpc
 
 TAU_CUT = 200.0          # DAYENU high-pass cutoff, ns
 TAU_MASK = 280.0         # everything below this is discarded, ns
-TAU_FG = 45.0            # intrinsic foreground delay extent, ns
+TAU_FG = 45.0            # illustrative short-baseline foreground extent, ns
 TAU_SW = 33.4            # feed-reflector standing wave (~5 m cavity), ns
-REQ_LO, REQ_HI = 110.0, 145.0   # 5 sigma BAO requirement band, ns (RFIsher)
+REQ_LO, REQ_HI = 100.0, 150.0   # scenario-dependent 5 sigma target range, ns
 
 tau = np.linspace(0, 420, 2000)
 k = KPER_US * tau / 1000.0
@@ -42,8 +43,8 @@ fig, ax = plt.subplots(figsize=(TEXTWIDTH, 3.1), dpi=200)
 
 # regions
 ax.axvspan(0, TAU_FG, color="0.75", alpha=0.9, lw=0)
-ax.text(TAU_FG / 2, 0.80, "intrinsic\nforegrounds", ha="center", va="center",
-        fontsize=7.5, bbox=box)
+ax.text(TAU_FG / 2, 0.79, "intrinsic\nforegrounds\n(schematic)", ha="center", va="center",
+        fontsize=6.8, bbox=box)
 ax.axvspan(TAU_CUT, TAU_MASK, color="#f4b6c2", alpha=0.8, lw=0)
 ax.text((TAU_CUT + TAU_MASK) / 2, 0.80, "filter\ntransition", ha="center",
         va="center", fontsize=7.5, bbox=box)
@@ -53,13 +54,13 @@ ax.text(350, 0.80, "kept in CHIME 2025\n$k_\\parallel > 0.35$", ha="center",
 
 # 5 sigma requirement
 ax.axvspan(REQ_LO, REQ_HI, color="#ffd966", alpha=0.55, lw=0)
-ax.text((REQ_LO + REQ_HI) / 2, -0.72, "5$\\sigma$ BAO needs\n$\\tau_{\\rm cut}$ here\n(Fig. 2)",
+ax.text((REQ_LO + REQ_HI) / 2, -0.72, "scenario-dependent 5$\\sigma$ target\n$\\tau_{\\rm cut}=100$--$150$ ns",
         ha="center", va="center", fontsize=7.5, bbox=box)
 
 # discarded span
 ax.annotate("", xy=(0, -0.95), xytext=(TAU_MASK, -0.95),
             arrowprops=dict(arrowstyle="<->", lw=1.1))
-ax.text(140, -1.02, "discarded: 200 ns DAYENU cut + 280 ns mask",
+ax.text(140, -1.02, "DAYENU cut: 200 ns; retained floor: 280 ns",
         ha="center", va="top", fontsize=7.5)
 
 # standing wave
@@ -71,7 +72,7 @@ ax.text(36, -0.40, "33 ns standing wave\n(validation case)", color="C3",
 m = tau > TAU_FG
 ax.plot(tau[~m], wiggle[~m], color="C0", lw=1.2, alpha=0.35)
 ax.plot(tau[m], wiggle[m], color="C0", lw=1.6)
-ax.text(140, 0.55, "BAO wiggles: $k \\simeq 0.05$–$0.3\\,h\\,$Mpc$^{-1}$",
+ax.text(140, 0.55, "BAO wiggles: $k \\simeq 0.05$ to $0.3\\,h\\,$Mpc$^{-1}$",
         color="C0", ha="center", fontsize=8, bbox=box)
 
 # cut-limiting population
@@ -79,7 +80,7 @@ ax.annotate("", xy=(300, 0.22), xytext=(REQ_LO, 0.22),
             arrowprops=dict(arrowstyle="<->", lw=1.0, color="0.3"))
 ax.text(205, 0.30,
         "cut-limiting population: cross-talk paths (to ~260 ns),\n"
-        "cable reflections — censused first",
+        "cable reflections; censused first",
         ha="center", va="bottom", fontsize=7.2, style="italic", bbox=box)
 
 ax.axvline(TAU_CUT, color="k", lw=1.0)
